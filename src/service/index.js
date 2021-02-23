@@ -40,3 +40,14 @@ export const getImages = async (token, page) => {
 
   return { status: response.status, data: responseData };
 };
+
+export const getSpecificImage = async (token, id) => {
+  const response = await fetch(`${process.env.VUE_APP_BASE_URL}images/${id}`, {
+    ...makeCommonOptions(token),
+    method: "GET"
+  });
+
+  const responseData = await response.json();
+
+  return { status: response.status, data: responseData };
+};

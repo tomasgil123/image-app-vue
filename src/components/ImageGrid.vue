@@ -7,25 +7,33 @@
       <div v-if="error">An error has occurred</div>
       <div class="container-images" v-else>
         <Image
+          v-on:click="onSeeImageDetail(image.id)"
           v-for="image in images.data.pictures"
           :key="image.id"
           :imgUrl="image.cropped_picture"
         />
       </div>
     </div>
+    <div v-if="showModal" class="container-modal">
+      <div v-if="loadingImageData">Loading images ...</div>
+      <div v-else>
+        <div v-if="errorDetailImage">
+          An error has occurred loading the image specific data
+        </div>
+        <div v-else>
+          {{ selectedImageDetails }}
+        </div>
+      </div>
+      <button v-on:click="closeModal">Close modal</button>
+    </div>
   </div>
 </template>
 
 <script>
 import Image from "./Image";
-import { getToken, getImages } from "../service";
+import { getToken, getImages, getSpecificImage } from "../service";
 import { useStore } from "vuex";
 import { ref, watchEffect } from "vue";
-
-//data.pictures
-//data.hasMore
-// cada picture cropped_picture: "http://interview.agileengine.com/pictures/cropped/0002.jpg"
-//id: "90322bc9cd20fd0f4ffa"
 
 export default {
   name: "ImageGrid",
@@ -62,7 +70,56 @@ export default {
       }
     });
 
-    return { images, loading, error };
+    const showModal = ref(false);
+    const errorDetailImage = ref(null);
+    const selectedImageId = ref(null);
+    const selectedImageDetails = ref(null);
+    const loadingImageData = ref(false);
+
+    watchEffect(async () => {
+      if (selectedImageId.value) {
+        loadingImageData.value = true;
+        try {
+          const token = store.getters.getToken();
+          const res = await getSpecificImage(token, selectedImageId.value);
+          if (res.status === 401) {
+            const { data } = await getToken();
+            if (data.auth) {
+              store.commit("setToken", data.token);
+            }
+            const res401 = await getImages(data?.token, selectedImageId.value);
+            selectedImageDetails.value = res401;
+            loadingImageData.value = false;
+          }
+          selectedImageDetails.value = res;
+          loadingImageData.value = false;
+        } catch (err) {
+          errorDetailImage.value = true;
+          loadingImageData.value = false;
+        }
+      }
+    });
+
+    const onSeeImageDetail = idImage => {
+      showModal.value = true;
+      selectedImageId.value = idImage;
+    };
+
+    const closeModal = () => {
+      showModal.value = false;
+    };
+
+    return {
+      onSeeImageDetail,
+      closeModal,
+      errorDetailImage,
+      selectedImageDetails,
+      loadingImageData,
+      showModal,
+      images,
+      loading,
+      error
+    };
   }
 };
 </script>
@@ -72,5 +129,18 @@ export default {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+}
+.container-modal {
+  position: absolute;
+  z-index: 5;
+  left: 0;
+  right: 0;
+  top: 50px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 80%;
+  height: 80%;
+  border: 1px solid black;
+  background-color: white;
 }
 </style>
