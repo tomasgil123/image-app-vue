@@ -1,5 +1,10 @@
 # image-app
 
+## About
+
+Image app is an app which display thumbnail images in a grid format. It includes pagination handling 
+and also allows the user to click on an image to see more details.
+
 ## Project setup
 ```
 yarn install
