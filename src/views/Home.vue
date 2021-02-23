@@ -1,23 +1,37 @@
+/* eslint-disable no-unused-vars */
 <template>
   <div class="home">
-    This is the home
+    <div>
+      <div v-if="page > 1">
+        <router-link :to="{ name: 'Home', query: { page: page - 1 } }"
+          >Prev page</router-link
+        >
+      </div>
+      <div>
+        <router-link :to="{ name: 'Home', query: { page: page + 1 } }"
+          >Next page</router-link
+        >
+      </div>
+    </div>
+    <Suspense>
+      <template #default>
+        <HomeLanding :page="page" />
+      </template>
+      <template #fallback>
+        <div>Loading...</div>
+      </template>
+    </Suspense>
   </div>
 </template>
 
 <script>
-import { getToken } from "../service";
-import { useStore } from "vuex";
+import HomeLanding from "../components/HomeLanding";
 
 export default {
   name: "Home",
-  props: ["page"],
-  async setup() {
-    const store = useStore();
-    // eslint-disable-next-line no-unused-vars
-    const { data } = await getToken();
-    if (data.auth) {
-      store.commit("setToken", data.token);
-    }
-  }
+  components: {
+    HomeLanding
+  },
+  props: ["page"]
 };
 </script>

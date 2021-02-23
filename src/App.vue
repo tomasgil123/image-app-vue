@@ -1,22 +1,12 @@
 <template>
-  <Suspense>
-    <template #default>
-      <Home />
-    </template>
-    <template #fallback>
-      <div>Loading...</div>
-    </template>
-  </Suspense>
+  <div id="app">
+    <router-view />
+  </div>
 </template>
 
 <script>
-import Home from "./views/Home";
-
 export default {
-  name: "App",
-  components: {
-    Home
-  }
+  name: "App"
 };
 </script>
 

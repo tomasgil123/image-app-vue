@@ -8,5 +8,10 @@ export default createStore({
     setToken(state, token) {
       state.token = token;
     }
+  },
+  getters: {
+    getToken: state => () => {
+      return state.token;
+    }
   }
 });
