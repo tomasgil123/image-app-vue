@@ -1,5 +1,12 @@
 <template>
-  <Home />
+  <Suspense>
+    <template #default>
+      <Home />
+    </template>
+    <template #fallback>
+      <div>Loading...</div>
+    </template>
+  </Suspense>
 </template>
 
 <script>

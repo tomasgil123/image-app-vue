@@ -5,7 +5,8 @@ const routes = [
   {
     path: "/",
     name: "Home",
-    component: Home
+    component: Home,
+    props: route => ({ page: Number(route.query.page) || 1 })
   }
 ];
 
