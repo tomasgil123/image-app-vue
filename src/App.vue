@@ -1,10 +1,17 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </div>
-  <router-view />
+  <Home />
 </template>
+
+<script>
+import Home from "./views/Home";
+
+export default {
+  name: "App",
+  components: {
+    Home
+  }
+};
+</script>
 
 <style>
 #app {
