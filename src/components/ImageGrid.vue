@@ -5,12 +5,19 @@
     <div v-if="loading">Loading images ...</div>
     <div v-else>
       <div v-if="error">An error has occurred</div>
-      <div v-else>{{ images }}</div>
+      <div class="container-images" v-else>
+        <Image
+          v-for="image in images.data.pictures"
+          :key="image.id"
+          :imgUrl="image.cropped_picture"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import Image from "./Image";
 import { getToken, getImages } from "../service";
 import { useStore } from "vuex";
 import { ref, watchEffect } from "vue";
@@ -22,6 +29,9 @@ import { ref, watchEffect } from "vue";
 
 export default {
   name: "ImageGrid",
+  components: {
+    Image
+  },
   props: ["page"],
   async setup(props) {
     const store = useStore();
@@ -56,3 +66,11 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.container-images {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+</style>
