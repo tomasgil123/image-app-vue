@@ -10,7 +10,7 @@ and also allows the user to click on an image to see more details.
 yarn install
 ```
 
-### env variables
+### Env variables
 
 Create and .env file at the root directory with the same variables as in the file .env.example.
 
